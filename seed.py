@@ -45,15 +45,15 @@ def load_movies():
     for row in open("seed_data/u.item"):
         row = row.rstrip().split("|")
         # row = row.split("|")
-        row = row[0:5]
-        movie_id, title, released_str, trash, imdb_url = row
-        title = title.rsplit(" ")
-        title = title[:-1]
-        temp = ""
+        # row = row[0:5]
+        movie_id, title, released_str, trash, imdb_url = row[0:5]
+        # title = title.rsplit(" ")
+        title = title[:-7]
+        # temp = ""
 
-        for item in title:
-            temp += item + ' '
-        title = temp
+        # for item in title:
+        #     temp += item + ' '
+        # title = temp
 
         if released_str:
             released_at = datetime.strptime(released_str, "%d-%b-%Y")
