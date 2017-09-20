@@ -4,7 +4,7 @@ from jinja2 import StrictUndefined
 
 from flask import jsonify
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session, url_for)
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Rating, Movie, connect_to_db, db
 
@@ -80,9 +80,23 @@ def log_in():
     user = db.session.query(User).filter(User.email == session['email'],
                                          User.password == session['password']).first()
 
+    session['user_id'] = user.user_id
+
     if user is None:
         return redirect("/register")
     else:
+        flash('You were successfully logged in')
+        return redirect("/")
+
+
+@app.route("/log-out", methods=["GET"])
+def log_out():
+    """Log out user"""
+
+    if session.get('user_id'):
+        del session['user_id']
+        flash('You were successfully logged out')
+        print session
         return redirect("/")
 
 
