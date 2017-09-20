@@ -28,6 +28,7 @@ def index():
     """Homepage."""
     return render_template("homepage.html")
 
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
@@ -74,18 +75,17 @@ def login_process():
 def log_in():
     """Log in user"""
 
-    session['email'] = request.form.get('email')
-    session['password'] = request.form.get('password')
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-    user = db.session.query(User).filter(User.email == session['email'],
-                                         User.password == session['password']).first()
-
-    session['user_id'] = user.user_id
+    user = db.session.query(User).filter(User.email == email,
+                                         User.password == password).first()
 
     if user is None:
         return redirect("/register")
     else:
         flash('You were successfully logged in')
+        session['user_id'] = user.user_id
         return redirect("/")
 
 
@@ -98,6 +98,16 @@ def log_out():
         flash('You were successfully logged out')
         print session
         return redirect("/")
+
+
+@app.route("/user-detail/<user_id>")
+def render_user(user_id):
+    """Render user scores and details"""
+
+    user = User.query.filter_by(user_id=user_id).first()
+
+    return render_template("user_details.html", user_details=user)
+
 
 
 if __name__ == "__main__":

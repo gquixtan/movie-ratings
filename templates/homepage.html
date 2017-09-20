@@ -21,15 +21,17 @@
     <h2>Users</h2>
     <p><a href="/users">View all users</a></p>
 
+    {% if 'user_id' not in session %}
+        <h2><p><a href="/register">Register</p></h2>
 
-    <h2><p><a href="/register">Register</p></h2>
+        <h2><p><a href="/log-in">Log In</p></h2>
+    {% else %}
 
-    <h2><p><a href="/log-in">Log In</p></h2>
-
-    <form action="/log-out" method-"GET">
-        <input type='hidden' name='logout'>
-        <input type='submit' value='Log Out'>
-    </form>
+        <form action="/log-out" method-"GET">
+            <input type='hidden' name='logout'>
+            <input type='submit' value='Log Out'>
+        </form>
+    {% endif %}
 
 
 {% endblock %}
