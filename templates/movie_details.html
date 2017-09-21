@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <h2>Movie Details</h2>
+
+    <div>
+      <h3>Title: {{ movie_details.movie.title }}</h3>
+      <h4>Release Date: {{ movie_details.movie.released_at }}</h4>
+    </div>
+
+    <h1>Add a rating</h1>
+
+  <form action="/rating" method="post">
+      <input type="radio" name="score" value="1" checked> 1<br>
+      <input type="radio" name="score" value="2" checked> 2<br>
+      <input type="radio" name="score" value="3" checked> 3<br>
+      <input type="radio" name="score" value="4" checked> 4<br>
+      <input type="radio" name="score" value="5" checked> 5<br><br>
+      <input type="submit">
+  </form>
+
+{% endblock %}

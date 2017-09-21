@@ -37,6 +37,16 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.order_by(Movie.title).all()
+    print movies
+
+    return render_template("movie_list.html", movies=movies)
+
+
 @app.route("/register", methods=["GET"])
 def register_process():
     """what happens after it queries database"""
@@ -86,7 +96,16 @@ def log_in():
     else:
         flash('You were successfully logged in')
         session['user_id'] = user.user_id
-        return redirect("/")
+
+        return redirect("/user-detail/"+str(session['user_id']))
+
+@app.route("/rating")
+def add_rating():
+    """ user adds a rating to a movie """
+
+    # if 'user_id' in session:
+    pass
+
 
 
 @app.route("/log-out", methods=["GET"])
@@ -107,6 +126,15 @@ def render_user(user_id):
     user = User.query.filter_by(user_id=user_id).first()
 
     return render_template("user_details.html", user_details=user)
+
+
+@app.route("/movie-detail/<movie_id>")
+def render_movie(movie_id):
+    """Render movie scores and details"""
+
+    movie = Rating.query.filter_by(movie_id=movie_id).first()
+
+    return render_template("movie_details.html", movie_details=movie)
 
 
 
