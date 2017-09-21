@@ -57,12 +57,16 @@ def register_process():
 def register_form():
     """Register user"""
 
+
+
+    # get the email and password from the user through the form
     email = request.form.get('email')
     password = request.form.get('password')
 
-    #here we do a db.seession query and bind it to user_email
+    #here we do a db.seession query to see if user is in database and bind it to user
     user = db.session.query(User).filter(User.email == email).first()
 
+    # if user is not in the database, add user to database
     if user is None:
         user = User(email=email, password=password)
         db.session.add(user)
@@ -85,9 +89,11 @@ def login_process():
 def log_in():
     """Log in user"""
 
+    # get the email and password from the user through the form
     email = request.form.get('email')
     password = request.form.get('password')
 
+    # this query checks if user is in the database
     user = db.session.query(User).filter(User.email == email,
                                          User.password == password).first()
 
@@ -104,17 +110,20 @@ def log_in():
 def add_rating(movie_id):
     """ user adds a rating to a movie """
 
+    # gets a score form the user throu the form
     score = request.form.get("score")
 
     if 'user_id' in session:
         check_rating = db.session.query(Rating).filter(Rating.user_id == session['user_id'],
                                                        Rating.movie_id == movie_id).first()
         if check_rating is None:
+            # adds a rating to a movie
             new_rating = Rating(score=score, movie_id=movie_id, user_id=session['user_id'])
             db.session.add(new_rating)
             db.session.commit()
             return redirect('/')
         else:
+            # updates an existing rating to a movies
             new_rating = Rating.query.filter_by(movie_id=movie_id, user_id=session['user_id']).first()
             new_rating.score = score
             db.session.add(new_rating)
@@ -131,7 +140,7 @@ def log_out():
     if session.get('user_id'):
         del session['user_id']
         flash('You were successfully logged out')
-        print session
+        # print session
         return redirect("/")
 
 
