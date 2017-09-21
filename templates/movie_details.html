@@ -6,18 +6,24 @@
 
     <div>
       <h3>Title: {{ movie_details.movie.title }}</h3>
-      <h4>Release Date: {{ movie_details.movie.released_at }}</h4>
+      <h4>Release Date: {{ movie_details.movie.released_at.strftime("%B %d, %Y") }}</h4>
     </div>
 
     <h1>Add a rating</h1>
 
-  <form action="/rating" method="post">
-      <input type="radio" name="score" value="1" checked> 1<br>
-      <input type="radio" name="score" value="2" checked> 2<br>
-      <input type="radio" name="score" value="3" checked> 3<br>
-      <input type="radio" name="score" value="4" checked> 4<br>
-      <input type="radio" name="score" value="5" checked> 5<br><br>
-      <input type="submit">
-  </form>
+  {% if 'user_id' not in session %}
+    <p>To rate this movie, please log in.</p>
+
+    <h2><p><a href="/log-in">Log In</p></h2>
+  {% else %}
+    <form action="/rating/{{ movie_details.movie.movie_id }}" method="post">
+        <input type="radio" name="score" value="1" checked> 1<br>
+        <input type="radio" name="score" value="2" checked> 2<br>
+        <input type="radio" name="score" value="3" checked> 3<br>
+        <input type="radio" name="score" value="4" checked> 4<br>
+        <input type="radio" name="score" value="5" checked> 5<br><br>
+        <input type="submit">
+    </form>
+  {% endif %}
 
 {% endblock %}

@@ -42,7 +42,6 @@ def movie_list():
     """Show list of movies."""
 
     movies = Movie.query.order_by(Movie.title).all()
-    print movies
 
     return render_template("movie_list.html", movies=movies)
 
@@ -63,6 +62,7 @@ def register_form():
 
     #here we do a db.seession query and bind it to user_email
     user = db.session.query(User).filter(User.email == email).first()
+
     if user is None:
         user = User(email=email, password=password)
         db.session.add(user)
@@ -99,13 +99,29 @@ def log_in():
 
         return redirect("/user-detail/"+str(session['user_id']))
 
-@app.route("/rating")
-def add_rating():
+
+@app.route("/rating/<movie_id>", methods=["POST"])
+def add_rating(movie_id):
     """ user adds a rating to a movie """
 
-    # if 'user_id' in session:
-    pass
+    score = request.form.get("score")
 
+    if 'user_id' in session:
+        check_rating = db.session.query(Rating).filter(Rating.user_id == session['user_id'],
+                                                       Rating.movie_id == movie_id).first()
+        if check_rating is None:
+            new_rating = Rating(score=score, movie_id=movie_id, user_id=session['user_id'])
+            db.session.add(new_rating)
+            db.session.commit()
+            return redirect('/')
+        else:
+            new_rating = Rating.query.filter_by(movie_id=movie_id, user_id=session['user_id']).first()
+            new_rating.score = score
+            db.session.add(new_rating)
+            db.session.commit()
+            return redirect('/')
+    else:
+        return redirect("/log-in")
 
 
 @app.route("/log-out", methods=["GET"])
